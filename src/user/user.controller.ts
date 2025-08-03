@@ -5,6 +5,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { User } from '../auth/decorators/user.decorator';
 import type { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from '@prisma/client';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('users')
 export class UserController {
@@ -15,7 +18,8 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get()
   findAll(@User() user: JwtPayload) {
     console.log('Usuário autenticado:', user);

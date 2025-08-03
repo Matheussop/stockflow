@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -14,12 +15,14 @@ export class UserService {
       data: {
         email: createUserDto.email,
         password: hashedPassword,
+        role: createUserDto.role ?? Role.USER,
       },
     });
 
     return {
       id: user.id,
       email: user.email,
+      role: user.role,
       createdAt: user.createdAt,
     };
   }
@@ -29,6 +32,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
+        role: true,
       },
     });
 
