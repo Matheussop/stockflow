@@ -3,7 +3,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
-import { User } from '../../auth/decorators/user.decorator';
+import { User } from '../auth/decorators/user.decorator';
 import type { JwtPayload } from 'src/modules/auth/interfaces/jwt-payload.interface';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from '@prisma/client';
