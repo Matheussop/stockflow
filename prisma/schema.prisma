@@ -25,4 +25,190 @@ model User {
   password  String
   role      Role     @default(USER)
   createdAt DateTime @default(now())
+  Sale      Sale[]
+  Company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+
+  logsCreated  InventoryLog[] @relation("InventoryLogCreatedBy")
+  logsReverted InventoryLog[] @relation("InventoryLogRevertedBy")
+}
+
+enum SaleStatus {
+  OPEN
+  COMPLETED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+}
+
+model Sale {
+  id            String        @id @default(uuid())
+  companyId     String
+  clientId      String?
+  userId        String?
+  saleDate      DateTime
+  status        SaleStatus
+  paymentStatus PaymentStatus
+  paymentMethod String?
+  total         Decimal       @db.Decimal(10, 2)
+  discount      Decimal       @default(0) @db.Decimal(10, 2)
+  note          String?
+
+  company Company    @relation(fields: [companyId], references: [id])
+  client  Client?    @relation(fields: [clientId], references: [id])
+  user    User?      @relation(fields: [userId], references: [id])
+  items   SaleItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  id        String  @id @default(uuid())
+  companyId String
+  name      String
+  document  String?
+  email     String?
+  phone     String?
+  address   String?
+  note      String?
+
+  company Company @relation(fields: [companyId], references: [id])
+  sales   Sale[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  color       String?
+  companyId   String
+
+  company  Company   @relation(fields: [companyId], references: [id])
+  products Product[]
+
+  createdAt DateTime @default(now())
+}
+
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  users        User[]
+  products     Product[]
+  categories   Category[]
+  clients      Client[]
+  sales        Sale[]
+  InventoryLog InventoryLog[]
+}
+
+model ProductVariant {
+  id        String  @id @default(uuid())
+  sku       String  @unique
+  size      Float?
+  unit      String?
+  color     String?
+  isActive  Boolean @default(true)
+  productId String
+
+  product    Product     @relation(fields: [productId], references: [id])
+  stockItems StockItem[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  SaleItem  SaleItem[]
+}
+
+model Product {
+  id         String  @id @default(uuid())
+  name       String
+  type       String?
+  isActive   Boolean @default(true)
+  companyId  String
+  categoryId String
+
+  company  Company          @relation(fields: [companyId], references: [id])
+  category Category         @relation(fields: [categoryId], references: [id])
+  variants ProductVariant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum InventoryLogType {
+  ENTRY
+  SALE
+  RETURN
+  ADJUSTMENT
+  LOSS
+}
+
+model InventoryLog {
+  id             String           @id @default(uuid())
+  stockItemId    String
+  type           InventoryLogType
+  quantityChange Int
+  previousQty    Int
+  newQty         Int
+  isManual       Boolean          @default(false)
+  isReverted     Boolean          @default(false)
+  sourceId       String?
+  sourceType     String?
+  userId         String?
+  revertedById   String?
+  note           String?
+  companyId      String
+
+  stockItem  StockItem @relation(fields: [stockItemId], references: [id])
+  company    Company   @relation(fields: [companyId], references: [id])
+  user       User?     @relation("InventoryLogCreatedBy", fields: [userId], references: [id])
+  revertedBy User?     @relation("InventoryLogRevertedBy", fields: [revertedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model StockItem {
+  id               String    @id @default(uuid())
+  productVariantId String
+  quantity         Int
+  unitPrice        Decimal   @db.Decimal(10, 2)
+  entryDate        DateTime
+  expirationDate   DateTime?
+  isActive         Boolean   @default(true)
+
+  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+  inventoryLogs  InventoryLog[]
+  saleItems      SaleItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SaleItem {
+  id               String  @id @default(uuid())
+  saleId           String
+  productVariantId String
+  stockItemId      String?
+  quantity         Int
+  unitPrice        Decimal @db.Decimal(10, 2)
+  discount         Decimal @default(0) @db.Decimal(10, 2)
+  total            Decimal @db.Decimal(10, 2)
+  note             String?
+
+  sale           Sale           @relation(fields: [saleId], references: [id])
+  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+  stockItem      StockItem?     @relation(fields: [stockItemId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
