@@ -134,6 +134,7 @@ model Product {
   id         String  @id @default(uuid())
   name       String
   type       String?
+  brand      String?
   isActive   Boolean @default(true)
   companyId  String
   categoryId String

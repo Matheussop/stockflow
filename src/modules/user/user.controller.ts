@@ -32,8 +32,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Get()
-  findAll(@User() user: JwtPayload) {
-    console.log('Usuário autenticado:', user);
+  findAll() {
     return this.userService.findAll();
   }
 }

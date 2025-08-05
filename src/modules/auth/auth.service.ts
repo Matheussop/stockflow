@@ -31,10 +31,16 @@ export class AuthService {
     return safeUser;
   }
 
-  async login(user: { id: string; email: string; role: Role }) {
+  async login(user: {
+    id: string;
+    email: string;
+    companyId: string;
+    role: Role;
+  }) {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
+      companyId: user.companyId,
       role: user.role,
     };
     const token = await this.jwtService.signAsync(payload);

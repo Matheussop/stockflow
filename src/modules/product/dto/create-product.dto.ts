@@ -1,4 +1,4 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProductDto {
@@ -12,4 +12,21 @@ export class CreateProductDto {
   })
   @IsUUID()
   categoryId: string;
+
+  @ApiProperty({
+    example: true,
+    description:
+      'Indicates whether the product is active (visible in listings)',
+    default: true,
+  })
+  @IsBoolean()
+  isActive?: boolean = true;
+
+  @ApiProperty({
+    example: 'Hydration Co.',
+    description: 'Optional brand name for product display',
+    required: false,
+  })
+  @IsString()
+  brand?: string;
 }

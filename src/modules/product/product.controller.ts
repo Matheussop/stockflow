@@ -22,7 +22,9 @@ import {
   ApiBearerAuth,
   ApiResponse,
   ApiOperation,
+  ApiOkResponse,
 } from '@nestjs/swagger';
+import { ProductEntity } from './entities/product.entity';
 
 @ApiTags('Products')
 @ApiBearerAuth()
@@ -32,7 +34,11 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @ApiOperation({ summary: 'Create a new product' })
-  @ApiResponse({ status: 201, description: 'Product successfully created' })
+  @ApiResponse({
+    status: 201,
+    description: 'Product successfully created',
+    type: ProductEntity,
+  })
   @Post()
   @Roles(Role.ADMIN, Role.MANAGER)
   create(
@@ -43,6 +49,7 @@ export class ProductController {
   }
 
   @ApiOperation({ summary: 'List all products from current company' })
+  @ApiOkResponse({ type: [ProductEntity] })
   @Get()
   @Roles(Role.ADMIN, Role.MANAGER, Role.VIEWER)
   findAll(@CurrentUser() user: User) {
@@ -50,6 +57,7 @@ export class ProductController {
   }
 
   @ApiOperation({ summary: 'Get a single product by ID' })
+  @ApiOkResponse({ type: ProductEntity })
   @Get(':id')
   @Roles(Role.ADMIN, Role.MANAGER, Role.VIEWER)
   findOne(@Param('id') id: string, @CurrentUser() user: User) {
@@ -57,6 +65,7 @@ export class ProductController {
   }
 
   @ApiOperation({ summary: 'Update a product by ID' })
+  @ApiOkResponse({ type: ProductEntity })
   @Put(':id')
   @Roles(Role.ADMIN, Role.MANAGER)
   update(
