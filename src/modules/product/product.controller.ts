@@ -77,6 +77,10 @@ export class ProductController {
   }
 
   @ApiOperation({ summary: 'Delete a product by ID' })
+  @ApiOkResponse({
+    description: 'Product deleted successfully',
+    type: ProductEntity,
+  })
   @Delete(':id')
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string, @CurrentUser() user: User) {
