@@ -28,7 +28,7 @@ model User {
   createdAt DateTime @default(now())
   Sale      Sale[]
   Company   Company? @relation(fields: [companyId], references: [id])
-  companyId String
+  companyId String?
 
   logsCreated  InventoryLog[] @relation("InventoryLogCreatedBy")
   logsReverted InventoryLog[] @relation("InventoryLogRevertedBy")

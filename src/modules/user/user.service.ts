@@ -15,6 +15,7 @@ export class UserService {
       data: {
         email: createUserDto.email,
         password: hashedPassword,
+        companyId: createUserDto.companyId || null,
         role: createUserDto.role ?? Role.USER,
       },
     });
