@@ -9,6 +9,7 @@ Key features include:
 - 🔁 Full audit trail of inventory changes (`InventoryLog`)
 - 🧾 Sales with itemized detail, customer info, and payment tracking
 - 🏢 Multi-company structure with scoped access control
+- 🧼 Controlled API serialization using `class-transformer` for secure and clean responses
 - 🔜 Future-ready for integrations (e.g., invoicing, loyalty programs)
 
 ---
@@ -26,6 +27,27 @@ Stockflow models a robust and extensible inventory + sales domain, including:
 - 🙋 `Client`: customer data used during sales
 
 👉 For detailed entity definitions, see the [full schema reference](docs/entities.md)
+
+---
+
+## 🔒 API Serialization Control
+
+Stockflow uses `class-transformer` with `@Exclude()` and `@Expose()` decorators to ensure only explicitly exposed fields are returned in API responses. This protects sensitive fields like `companyId` from leaking into client-side payloads.
+
+The `ClassSerializerInterceptor` is enabled globally, and entities like `ProductEntity` define exactly which fields are visible.
+
+Example:
+```ts
+@Exclude()
+export class ProductEntity {
+  @Expose() id: string;
+  @Expose() name: string;
+  @Expose() price: number;
+  // No `@Expose()` for companyId — it won't be serialized
+}
+```
+
+This approach helps maintain a clean, predictable API surface.
 
 ---
 
