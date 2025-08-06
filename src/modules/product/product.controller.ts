@@ -6,7 +6,7 @@ import {
   Param,
   Delete,
   UseGuards,
-  Put,
+  Patch,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -22,6 +22,7 @@ import {
   ApiResponse,
   ApiOperation,
   ApiOkResponse,
+  ApiParam,
 } from '@nestjs/swagger';
 import { ProductEntity } from './entities/product.entity';
 import type { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
@@ -43,10 +44,10 @@ export class ProductController {
   })
   @Post()
   @Roles(Role.ADMIN, Role.MANAGER)
-  create(
+  async create(
     @Body() createProductDto: CreateProductDto,
     @CurrentUser({ requireCompanyId: true }) user: UserWithCompany,
-  ) {
+  ): Promise<ProductEntity> {
     return this.productService.create(createProductDto, user.companyId);
   }
 
@@ -54,30 +55,43 @@ export class ProductController {
   @ApiOkResponse({ type: [ProductEntity] })
   @Get()
   @Roles(Role.ADMIN, Role.MANAGER, Role.VIEWER)
-  findAll(@CurrentUser({ requireCompanyId: true }) user: UserWithCompany) {
+  async findAll(
+    @CurrentUser({ requireCompanyId: true }) user: UserWithCompany,
+  ): Promise<ProductEntity[] | undefined> {
     return this.productService.findAll(user.companyId);
   }
 
   @ApiOperation({ summary: 'Get a single product by ID' })
   @ApiOkResponse({ type: ProductEntity })
+  @ApiParam({
+    name: 'id',
+    description: 'Product ID',
+    example: 'ea734dc6-53f9-4cef-a4a8-266772b3003f',
+  })
   @Get(':id')
   @Roles(Role.ADMIN, Role.MANAGER, Role.VIEWER)
-  findOne(
+  async findOne(
     @Param('id') id: string,
     @CurrentUser({ requireCompanyId: true }) user: UserWithCompany,
-  ) {
-    return this.productService.findOne(id, user.companyId);
+  ): Promise<ProductEntity> {
+    const product = await this.productService.findOne(id, user.companyId);
+    return product;
   }
 
   @ApiOperation({ summary: 'Update a product by ID' })
   @ApiOkResponse({ type: ProductEntity })
-  @Put(':id')
+  @ApiParam({
+    name: 'id',
+    description: 'Product ID',
+    example: 'ea734dc6-53f9-4cef-a4a8-266772b3003f',
+  })
+  @Patch(':id')
   @Roles(Role.ADMIN, Role.MANAGER)
-  update(
+  async update(
     @Param('id') id: string,
     @Body() dto: UpdateProductDto,
     @CurrentUser({ requireCompanyId: true }) user: UserWithCompany,
-  ) {
+  ): Promise<ProductEntity> {
     return this.productService.update(id, dto, user.companyId);
   }
 
@@ -86,12 +100,17 @@ export class ProductController {
     description: 'Product deleted successfully',
     type: ProductEntity,
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Product ID',
+    example: 'ea734dc6-53f9-4cef-a4a8-266772b3003f',
+  })
   @Delete(':id')
   @Roles(Role.ADMIN)
-  remove(
+  async remove(
     @Param('id') id: string,
     @CurrentUser({ requireCompanyId: true }) user: UserWithCompany,
-  ) {
+  ): Promise<ProductEntity> {
     return this.productService.remove(id, user.companyId);
   }
 }
