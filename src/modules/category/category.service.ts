@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
@@ -56,6 +56,12 @@ export class CategoryService {
     const category = await this.findOne(id, companyId);
 
     if (!category) throw new NotFoundException();
+
+    const productCount = await this.prisma.product.count({ where: { categoryId: id, deletedAt: null } });
+    if (productCount > 0) {
+      throw new ConflictException('Category has products. Reassign it.');
+    }
+
     const categoryDeleted = await this.prisma.category.delete({
       where: { id: category.id },
     });

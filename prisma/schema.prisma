@@ -131,13 +131,14 @@ model ProductVariant {
 }
 
 model Product {
-  id         String  @id @default(uuid())
+  id         String    @id @default(uuid())
   name       String
   type       String?
   brand      String?
-  isActive   Boolean @default(true)
+  isActive   Boolean   @default(true)
   companyId  String
   categoryId String
+  deletedAt  DateTime?
 
   company  Company          @relation(fields: [companyId], references: [id])
   category Category         @relation(fields: [categoryId], references: [id])

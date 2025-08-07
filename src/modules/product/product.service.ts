@@ -23,14 +23,14 @@ export class ProductService {
 
   async findAll(companyId: string): Promise<ProductEntity[] | undefined> {
     const products = await this.prisma.product.findMany({
-      where: { companyId },
+      where: { companyId, deletedAt: null },
     });
     return products.map((item) => new ProductEntity(item));
   }
 
   async findOne(id: string, companyId: string): Promise<ProductEntity> {
     const product = await this.prisma.product.findFirst({
-      where: { id, companyId },
+      where: { id, companyId, deletedAt: null },
     });
 
     if (!product) throw new NotFoundException('Product not found');
@@ -56,8 +56,8 @@ export class ProductService {
     const product = await this.findOne(id, companyId);
 
     if (!product) throw new NotFoundException();
-    const productDeleted = await this.prisma.product.delete({
-      where: { id: product.id },
+    const productDeleted = await this.prisma.product.update({
+      where: { id: product.id }, data: { deletedAt: new Date() },
     });
     return new ProductEntity(productDeleted);
   }
