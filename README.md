@@ -59,29 +59,30 @@ This approach helps maintain a clean, predictable API surface.
 ```bash
 src/
 ├── main.ts                # Application entry point
-├── app.module.ts         # Root module
-├── config/               # Environment configs, constants
-│   ├── env.ts            # Environment variable validation
-│   └── prisma.config.ts  # Prisma service configuration
-├── modules/              # Main domain modules
-│   ├── company/          # Company management
-│   ├── category/         # Product categories
-│   ├── product/          # Product + ProductVariant
-│   ├── stock/            # StockItem + InventoryLog
-│   ├── sale/             # Sale + SaleItem
-│   ├── client/           # Client CRUD
-│   ├── auth/             # Authentication, guards, roles
-│   └── user/             # User and role assignments
-├── common/               # Shared utilities, DTOs, pipes, guards
-│   ├── decorators/       # Custom decorators (e.g., current user)
-│   ├── dtos/             # Generic/shared DTOs
-│   ├── filters/          # Global exception filters
-│   ├── interceptors/     # Logging, transformation
-│   └── guards/           # Auth and permissions
-├── prisma/               # Prisma schema and seed
-│   ├── schema.prisma     # Main Prisma schema file
-│   └── seed.ts           # Optional seeding script
-└── tests/                # E2E or integration tests
+├── app.module.ts          # Root module
+├── config/                # Configuration (e.g., Prisma)
+│   └── prisma/            # Prisma integration for NestJS
+│       ├── prisma.module.ts
+│       └── prisma.service.ts
+├── modules/               # Main domain modules
+│   ├── company/           # Company management
+│   ├── category/          # Product categories
+│   ├── product/           # Product + ProductVariant
+│   ├── stock/             # StockItem + InventoryLog
+│   ├── sale/              # Sale + SaleItem
+│   ├── client/            # Client CRUD
+│   ├── auth/              # Authentication, guards, roles
+│   └── user/              # User and role assignments
+├── common/                # Shared utilities, DTOs, pipes, guards
+│   ├── decorators/        # Custom decorators (e.g., current user)
+│   ├── dtos/              # Generic/shared DTOs
+│   ├── filters/           # Global exception filters
+│   ├── interceptors/      # Logging, transformation
+│   └── guards/            # Auth and permissions
+├── prisma/                # Prisma schema and seed
+│   ├── schema.prisma      # Main Prisma schema file
+│   └── seed.ts            # Optional seeding script
+└── tests/                 # E2E or integration tests
 ```
 
 ---

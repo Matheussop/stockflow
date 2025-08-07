@@ -28,7 +28,7 @@ export class RolesGuard implements CanActivate {
     const user = request.user as JwtPayload;
 
     if (!user || !requiredRoles.includes(user.role)) {
-      throw new ForbiddenException(`Access denied ${user.role}`);
+      throw new ForbiddenException(`Access denied`);
     }
 
     return true;

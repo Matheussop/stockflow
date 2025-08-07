@@ -27,17 +27,9 @@ export class CategoryEntity {
 
   @Expose()
   @ApiProperty()
-  type: string;
-
-  @Expose()
-  @ApiProperty()
-  color: string;
+  color?: string;
 
   @Expose()
   @ApiProperty()
   createdAt: Date;
-
-  @Expose()
-  @ApiProperty()
-  updatedAt: Date;
 }
