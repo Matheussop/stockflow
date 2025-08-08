@@ -28,6 +28,57 @@ Stockflow models a robust and extensible inventory + sales domain, including:
 
 👉 For detailed entity definitions, see the [full schema reference](docs/entities.md)
 
+
+---
+
+## 📚 API Endpoints Overview
+
+### Auth
+- **POST /auth/login** — Login on system
+- **POST /auth/register** — Register new user
+
+### Users
+- **GET /users** — List users (🔒 JWT required)
+- **GET /users/me** — Get current user info (🔒 JWT required)
+- **GET /users/{id}** — Get user by ID (🔒 JWT required)
+- **PATCH /users/{id}** — Update user by ID (🔒 JWT required)
+- **DELETE /users/{id}** — Delete user by ID (🔒 JWT required)
+
+### Products
+- **GET /products** — List products (🔒 JWT required)
+- **POST /products** — Create product (🔒 JWT required)
+- **GET /products/{id}** — Get product by ID (🔒 JWT required)
+- **PATCH /products/{id}** — Update product by ID (🔒 JWT required)
+- **DELETE /products/{id}** — Delete product by ID (🔒 JWT required)
+
+### Category
+- **GET /categories** — List categories (🔒 JWT required)
+- **POST /categories** — Create category (🔒 JWT required)
+- **GET /categories/{id}** — Get category by ID (🔒 JWT required)
+- **PATCH /categories/{id}** — Update category by ID (🔒 JWT required)
+- **DELETE /categories/{id}** — Delete category by ID (🔒 JWT required)
+
+### Client
+- **GET /clients** — List clients (🔒 JWT required)
+- **POST /clients** — Create client (🔒 JWT required)
+- **GET /clients/{id}** — Get client by ID (🔒 JWT required)
+- **PATCH /clients/{id}** — Update client by ID (🔒 JWT required)
+- **DELETE /clients/{id}** — Delete client by ID (🔒 JWT required)
+
+### Sales
+- **GET /sales** — List sales (🔒 JWT required)
+- **POST /sales** — Create sale (🔒 JWT required)
+- **GET /sales/{id}** — Get sale by ID (🔒 JWT required)
+- **PATCH /sales/{id}** — Update sale by ID (🔒 JWT required)
+- **DELETE /sales/{id}** — Delete sale by ID (🔒 JWT required)
+
+### Inventory Logs
+- **GET /inventory-logs** — List inventory logs (🔒 JWT required)
+- **POST /inventory-logs** — Create inventory log entry (🔒 JWT required)
+- **GET /inventory-logs/{id}** — Get inventory log by ID (🔒 JWT required)
+
+👉 For detailed request/response schemas, refer to the Swagger UI at `/api/docs`.
+
 ---
 
 ## 🔒 API Serialization Control

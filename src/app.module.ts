@@ -9,6 +9,7 @@ import { PrismaModule } from './config/prisma/prisma.module';
 import { InventoryLogModule } from './modules/inventory-log/inventory-log.module';
 import { SaleModule } from './modules/sale/sale.module';
 import { ClientModule } from './modules/client/client.module';
+import { ProductVariantModule } from './modules/product-variant/product-variant.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ClientModule } from './modules/client/client.module';
     ClientModule,
     SaleModule,
     PrismaModule,
+    ProductVariantModule,
     InventoryLogModule,
   ],
   controllers: [AppController],
