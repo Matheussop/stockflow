@@ -9,6 +9,7 @@ import { PrismaModule } from './config/prisma/prisma.module';
 import { InventoryLogModule } from './modules/inventory-log/inventory-log.module';
 import { SaleModule } from './modules/sale/sale.module';
 import { ClientModule } from './modules/client/client.module';
+import { CompanyModule } from './modules/company/company.module';
 import { ProductVariantModule } from './modules/product-variant/product-variant.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { ProductVariantModule } from './modules/product-variant/product-variant.
     ProductModule,
     CategoryModule,
     ClientModule,
+    CompanyModule,
     SaleModule,
     PrismaModule,
     ProductVariantModule,
