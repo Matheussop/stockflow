@@ -8,6 +8,7 @@ import { CategoryModule } from './modules/category/category.module';
 import { PrismaModule } from './config/prisma/prisma.module';
 import { InventoryLogModule } from './modules/inventory-log/inventory-log.module';
 import { SaleModule } from './modules/sale/sale.module';
+import { ClientModule } from './modules/client/client.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SaleModule } from './modules/sale/sale.module';
     AuthModule,
     ProductModule,
     CategoryModule,
+    ClientModule,
     SaleModule,
     PrismaModule,
     InventoryLogModule,
