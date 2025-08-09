@@ -11,6 +11,8 @@ import { SaleModule } from './modules/sale/sale.module';
 import { ClientModule } from './modules/client/client.module';
 import { CompanyModule } from './modules/company/company.module';
 import { ProductVariantModule } from './modules/product-variant/product-variant.module';
+import { SaleItemModule } from './modules/sale-item/sale-item.module';
+
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { ProductVariantModule } from './modules/product-variant/product-variant.
     PrismaModule,
     ProductVariantModule,
     InventoryLogModule,
+    SaleItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],
