@@ -6,9 +6,12 @@ import {
   IsEnum,
   IsString,
   IsNumber,
+  Min,
+  ValidateNested,
 } from 'class-validator';
 import { PaymentStatus, SaleStatus } from '@prisma/client';
 import { Type } from 'class-transformer';
+import { CreateSaleItemDtoWithoutSaleId } from './create-sale-item-without-sale-id.dto';
 
 export class CreateSaleDto {
   @ApiPropertyOptional({
@@ -37,7 +40,7 @@ export class CreateSaleDto {
   paymentMethod?: string;
 
   @ApiProperty({ example: 100.0 })
-  @Type(() => Number)
+  @Min(0, {message: "Total has to be at least 0."})
   @IsNumber()
   total: number;
 
@@ -51,4 +54,16 @@ export class CreateSaleDto {
   @IsString()
   @IsOptional()
   note?: string;
+  
+  @ApiProperty({
+    description: 'Respective items to a sale',
+    type: CreateSaleItemDtoWithoutSaleId,
+    isArray: true,
+    example: [
+      { productVariantId: 'd2d4b3d4-...', quantity: 2, price: 19.9 },
+      { productVariantId: 'a1c2e3f4-...', quantity: 1, price: 5.0, discount: 1.0 },
+    ],
+  })  @ValidateNested({each: true})
+  @Type(() => CreateSaleItemDtoWithoutSaleId)
+  items: CreateSaleItemDtoWithoutSaleId[];
 }
