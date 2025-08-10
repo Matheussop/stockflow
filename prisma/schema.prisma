@@ -60,11 +60,11 @@ model Sale {
   total         Decimal       @db.Decimal(10, 2)
   discount      Decimal       @default(0) @db.Decimal(10, 2)
   note          String?
+  items         SaleItem[]
 
-  company Company    @relation(fields: [companyId], references: [id])
-  client  Client?    @relation(fields: [clientId], references: [id])
-  user    User?      @relation(fields: [userId], references: [id])
-  items   SaleItem[]
+  company Company @relation(fields: [companyId], references: [id])
+  client  Client? @relation(fields: [clientId], references: [id])
+  user    User?   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
