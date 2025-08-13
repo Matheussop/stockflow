@@ -15,7 +15,7 @@ export class SaleService {
     userId: string,
   ): Promise<SaleEntity> {
     const { items, saleDate, ...rest } = dto;
-
+    // todo implements stock item quantity verification
     const data: Prisma.SaleUncheckedCreateInput = {
       ...rest,
       saleDate: saleDate ? new Date(saleDate) : new Date(),
