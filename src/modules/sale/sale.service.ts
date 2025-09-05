@@ -36,8 +36,14 @@ export class SaleService {
     const sale = await this.prisma.$transaction(async (tx) => {
       // 1) Validate items exist and stock is available
       const variants = await tx.productVariant.findMany({
-        where: { id: { in: dto.items.map(i => i.productVariantId) } },
-        select: { id: true }
+        where: { 
+          id: { in: dto.items.map(i => i.productVariantId) },
+          product: { companyId}
+        },
+        select: { 
+          id: true, 
+          productId: true,
+        }
       });
 
       this.ensureAllExist(variants, dto.items);
@@ -50,6 +56,7 @@ export class SaleService {
         data: {
           companyId,
           saleDate: saleDate ? new Date(saleDate) : new Date(),
+          userId,
           ...rest
         }
       });
@@ -86,12 +93,15 @@ export class SaleService {
               sourceId: sale.id,
               sourceType: 'SALE',
               userId: userId,
-              note: sale.note ?? null
+              note: `Sale #${sale.id} - ${alloc.productVariantId}`,
             }
           });
           await tx.stockItem.update({
             where: { id: line.stockItemId },
-            data: { quantity: { decrement: line.qtyAllocated } }
+            data: { 
+              quantity: { decrement: line.qtyAllocated },
+              updatedAt: new Date(),
+            }
           });
         }
       }
@@ -100,12 +110,25 @@ export class SaleService {
       return tx.sale.findUnique({
         where: { id: sale.id },
         include: {
-          items: true,
+          items: {
+            include: {
+              productVariant: {
+                select: { sku: true, product: { select: { name: true } } }
+              }
+            }
+          },
+          client: {
+            select: { name: true, email: true }
+          }
         }
       });
+    }, {
+      maxWait: 5000,
+      timeout: 10000, 
+      isolationLevel: 'ReadCommitted' // Appropriate for inventory operations
     });
 
-    if (!sale) throw new NotFoundException('Sale not found');
+    if (!sale) throw new NotFoundException('Failed to create sale');
     return new SaleEntity(sale);
   }
 
