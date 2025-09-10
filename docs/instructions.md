@@ -138,6 +138,9 @@ src/
 - **controllers.md**: API controllers and endpoint patterns (includes individual endpoint creation)
 - **conventional-commits.md**: Git commit message standards
 
+### Task-Specific Prompts
+- **when-to-update.md**: Documentation maintenance and update triggers 
+  
 ## Changelog & Architecture
 
 ### Recent Architectural Decisions (from CHANGELOG.md)

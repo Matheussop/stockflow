@@ -16,7 +16,6 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Role } from '@prisma/client';
 import { User as CurrentUser } from '../auth/decorators/user.decorator';
-import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import {
   ApiBearerAuth,
   ApiOkResponse,

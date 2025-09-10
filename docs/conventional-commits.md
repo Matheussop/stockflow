@@ -103,6 +103,94 @@ perf(queries): optimize product search with database indexes
 perf(sale): improve stock allocation performance for large inventories
 ```
 
+## Semantic Commit Types for Cleanup
+
+### `cleanup` - Code Cleanup and Organization
+Commits that improve code quality, readability, or maintainability without changing functionality.
+
+```bash
+cleanup(sale): remove unused imports and dead code
+cleanup(auth): consolidate duplicate validation logic
+cleanup(models): organize entity properties alphabetically
+cleanup(controllers): remove commented code and add consistent spacing
+```
+
+### `remove` - Removal of Features/Code
+Commits that remove features, deprecated code, or unused assets.
+
+```bash
+remove(legacy): delete deprecated authentication endpoints
+remove(unused): remove unused helper functions and types
+remove(feature): remove experimental product rating system
+remove(deps): remove unused package dependencies
+```
+
+### `rename` - Renaming Operations
+Commits focused on renaming files, variables, functions, or modules for better clarity.
+
+```bash
+rename(entities): rename Product to ProductEntity for consistency
+rename(services): rename getUserData to getCurrentUserProfile
+rename(modules): reorganize auth module structure for clarity
+rename(files): update file naming to follow project conventions
+```
+
+### `move` - File/Code Movement
+Commits that move files or reorganize code structure without functional changes.
+
+```bash
+move(utils): relocate validation helpers to shared utils directory
+move(types): move common interfaces to shared types folder
+move(components): reorganize feature modules by domain
+move(config): relocate environment configuration files
+```
+
+### `organize` - Code Organization
+Commits that reorganize imports, exports, or overall project structure.
+
+```bash
+organize(imports): group and sort imports consistently across modules
+organize(exports): consolidate barrel exports for better module structure  
+organize(folders): restructure project directories by feature domain
+organize(dependencies): group related service dependencies logically
+```
+
+### Guidelines for Cleanup Commits
+
+#### When to Use Cleanup Types
+- **Code quality improvements** that don't affect functionality
+- **Removing technical debt** accumulated over time
+- **Preparing for new features** by organizing existing code
+- **Post-feature cleanup** after completing major functionality
+
+#### Best Practices for Cleanup
+```bash
+# ✅ Good - Specific about what was cleaned
+cleanup(sale): remove debug console.log statements and format code
+remove(legacy): delete deprecated v1 API endpoints and related middleware
+rename(entities): update UserProfile to User for consistency with domain model
+
+# ❌ Bad - Too vague or unclear impact
+cleanup(sale): various improvements
+remove(stuff): delete old code
+rename(things): better names
+```
+
+#### Cleanup Scope Recommendations
+- **Technical scopes**: `imports`, `exports`, `types`, `utils`, `config`
+- **Module scopes**: Use existing domain modules (`sale`, `auth`, `product`)
+- **Global scopes**: `project`, `structure`, `dependencies`, `documentation`
+
+#### Combining Cleanup Types
+For comprehensive cleanup spanning multiple aspects:
+
+```bash
+cleanup(product): remove dead code, organize imports, and rename ambiguous variables
+
+Removes 15 unused helper functions, consolidates import statements,
+and renames variables like 'data' to more descriptive names like 'productData'.
+```
+
 ## Scope Guidelines
 
 ### Domain-Based Scopes
