@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to Semantic Versioning.
 
+## [Unreleased]
+
+### Added
+- Enhanced SaleService with company validation and userId tracking for better security and audit trail
+- FIFO (First In, First Out) stock allocation logic for sale items
+- Product variant existence validation before processing sales
+- Comprehensive stock item validation and allocation system
+- Improved sale creation with nested item creation and better error handling
+- Swagger UI URL logging on application startup for developer convenience
+
+### Fixed
+- JWT strategy validation with improved error handling and security
+- Stock item quantity updates with proper timestamp tracking
+- Sale retrieval now includes improved item details and associations
+
+### Changed
+- Sale processing now implements sophisticated inventory management with FIFO logic
+- Enhanced error handling throughout the sale creation process
+- Improved sale item details in sale retrieval operations
+
 ## [0.2.0] - 2025-08-10
 
 ### Changed
