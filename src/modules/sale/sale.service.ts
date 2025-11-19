@@ -30,7 +30,7 @@ export class SaleService {
     dto: CreateSaleDto,
     companyId: string,
     userId: string,
-  ): Promise<SaleEntity> {  // todo change return to contain items  
+  ): Promise<SaleEntity> { 
     const { items, saleDate, ...rest } = dto;
 
     const sale = await this.prisma.$transaction(async (tx) => {
@@ -60,7 +60,7 @@ export class SaleService {
           ...rest
         }
       });
-  
+    
       // 4) Create SaleItems
       await Promise.all(dto.items.map((it, idx) =>
         tx.saleItem.create({
@@ -78,33 +78,48 @@ export class SaleService {
       ));
   
       // 5) Write Inventory movements + decrement stock
+      // Prepare data for bulk operations
+      const inventoryLogData: Prisma.InventoryLogCreateManyInput[] = [];
+      const stockItemUpdatePromises: Promise<any>[] = [];
+
       for (const alloc of allocations) {
         for (const line of alloc.lines) {
-          await tx.inventoryLog.create({
-            data: {
-              companyId,
-              type: 'SALE',
-              stockItemId: line.stockItemId,
-              quantityChange: line.qtyAllocated,
-              previousQty: line.qtyPrevious,
-              newQty: line.qtyPrevious - line.qtyAllocated,
-              isManual: false,
-              isReverted: false,
-              sourceId: sale.id,
-              sourceType: 'SALE',
-              userId: userId,
-              note: `Sale #${sale.id} - ${alloc.productVariantId}`,
-            }
+          // Collect inventory log data for bulk insert
+          inventoryLogData.push({
+            companyId,
+            type: 'SALE',
+            stockItemId: line.stockItemId,
+            quantityChange: line.qtyAllocated,
+            previousQty: line.qtyPrevious,
+            newQty: line.qtyPrevious - line.qtyAllocated,
+            isManual: false,
+            isReverted: false,
+            sourceId: sale.id,
+            sourceType: 'SALE',
+            userId: userId,
+            note: `Sale #${sale.id} - ${alloc.productVariantId}`,
           });
-          await tx.stockItem.update({
-            where: { id: line.stockItemId },
-            data: { 
-              quantity: { decrement: line.qtyAllocated },
-              updatedAt: new Date(),
-            }
-          });
+
+          // Stock items need individual updates (different decrement values per item)
+          stockItemUpdatePromises.push(
+            tx.stockItem.update({
+              where: { id: line.stockItemId },
+              data: {
+                quantity: { decrement: line.qtyAllocated },
+                updatedAt: new Date(),
+              },
+            }),
+          );
         }
       }
+
+      // Execute bulk insert for inventory logs (single database operation)
+      await tx.inventoryLog.createMany({
+        data: inventoryLogData,
+      });
+
+      // Execute all stock item updates in parallel (each with different decrement value)
+      await Promise.all(stockItemUpdatePromises);
 
       // 6) Return sale with items
       return tx.sale.findUnique({
